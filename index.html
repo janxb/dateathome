@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<title>Date@Home - Group Planner</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="app" v-cloak>
+	<div class="container">
+		<br>
+
+
+		<ul class="nav nav-pills" id="myTab" role="tablist">
+			<li class="nav-item">
+				<a aria-controls="data" aria-selected="true" class="nav-link active" data-toggle="tab" href="#data" id="home-tab"
+				   role="tab">People</a>
+			</li>
+			<li class="nav-item">
+				<a aria-controls="rooms" aria-selected="false" class="nav-link" data-toggle="tab" href="#rooms" id="profile-tab"
+				   role="tab">Rooms</a>
+			</li>
+		</ul>
+		<div class="tab-content" id="myTabContent">
+			<div aria-labelledby="data-tab" class="tab-pane show active" id="data" role="tabpanel">
+				<br>
+				<div class="row">
+					<div class="col-sm" v-for="group in groups">
+						<div class="card">
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item list-group-item-dark font-weight-bold d-flex justify-content-between align-items-center">
+									{{group.name}}
+									<span class="badge">
+									<a @click="removeGroup(group)" class="btn" href="#"><i class="fas fa-trash"></i></a>
+								</span>
+								</li>
+								<li class="list-group-item d-flex justify-content-between align-items-center" v-for="member in group.members">
+									{{member}}
+									<span class="badge">
+										<a @click="removeMember(group, member)" class="btn" href="#"><i class="fas fa-minus-circle"></i></a>
+									</span>
+								</li>
+							</ul>
+						</div>
+
+						<input @keyup.enter="addMember(group, $event)" class="form-control w-100" placeholder="Add Member" type="text"/>
+					</div>
+					<div class="col-sm">
+						<a @click="addGroup" class="btn btn-success" href="#">
+							<i class="fas fa-plus-circle"></i> Add Group</a>
+					</div>
+				</div>
+			</div>
+			<div aria-labelledby="rooms-tab" class="tab-pane" id="rooms" role="tabpanel">
+				<br>
+				<ul class="nav nav-pills">
+					<li class="nav-item">
+						<a :class="{active:meetingMode==='groupbased'}" @click="generateRoundsGroupBased" class="nav-link" data-toggle="tab" href="#">Group-based</a>
+					</li>
+					<li class="nav-item">
+						<a :class="{active:meetingMode==='allvsall'}" @click="generateRoundsAllVsAll" class="nav-link" data-toggle="tab" href="#">All-vs-All</a>
+					</li>
+				</ul>
+
+				<br>
+
+				<nav>
+					<ul class="pagination">
+						<li :class="{disabled:currentRoundNo<=1}" class="page-item">
+							<a @click="currentRoundNo--" class="page-link" href="#" tabindex="-1">&lt;&lt;</a>
+						</li>
+						<li :class="{active: roundNo === currentRoundNo }" class="page-item" v-for="roundNo in rounds.length">
+							<a class="page-link" href="#">{{roundNo}}</a>
+						</li>
+						<li :class="{disabled:currentRoundNo>=rounds.length}" class="page-item">
+							<a @click="currentRoundNo++" class="page-link" href="#">&gt;&gt;</a>
+						</li>
+					</ul>
+				</nav>
+
+				<table class="table table-bordered table-striped w-50">
+					<tr v-for="(session, sessionNo) in currentRound.sessions">
+						<th class="text-center" width="6%">{{sessionNo+1}}</th>
+						<td class="text-right" width="47%">{{session.a}}</td>
+						<td class="text-left" width="47%">{{session.b}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sugar/2.0.6/sugar.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
